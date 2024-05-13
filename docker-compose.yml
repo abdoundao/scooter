@@ -1,0 +1,30 @@
+version: '3.1'
+services:
+    postgres:
+        image: postgres
+        container_name: postgres
+        ports:
+          - "5432:5432"
+        environment:
+          - POSTGRES_USER=sefas
+          - POSTGRES_PASSWORD=sefas
+          - POSTGRES_DB=sefas
+    designerj:
+        image: sefasinnovation/designer:latest
+        container_name: designerj
+        ports:
+          - "9080:9080"
+          - "9088:9088"
+          - "9089:9089"
+#volumes:
+# - volumehcs:/srv/hcs/hcsuser
+        environment:
+            - EXTERNAL_SERVER_NAME=ginkgo
+            - LOCALE=en_US.UTF-8
+            - DATABASE=PostgreSQL
+            - DBSERVER=postgres
+            - DBPORT=5432
+            - DBSERVICE=sefas
+            - DBSCHEMA=sefas
+            - DBLOGIN=sefas
+            - DBPASSWORD=sefas
