@@ -38,18 +38,26 @@ def child_printer(node, tree):
             node['is_external'] = True
         node['used_time'] = 1
 
-        if 'attributes' in node and 'resdescid' in node['attributes']:
-            node['resdescid'] = node['attributes']['resdescid']
-            node['used_time'] = get_content(node['attributes']['resdescid'])
+        if 'attributes' in node:
+            if 'resdescid' in node['attributes']:
+                node['used_time'] = get_content(node['attributes']['resdescid'])
+            try:
+                for k,v in node['attributes'].items():
+                    node[k] = v
+
+                node.pop('attributes')
+            except:
+                print("Impossible")
 
         if 'children' in node:
             children = node['children'].copy()
             node.pop('children')
             # Enlever et remettre children comme cela il sera en bas du référentiel
-            node['children'] = children
-            tree += 1
-            for child in node['children']:
-                child_printer(child, tree)
+            if children and children is not []:
+                node['children'] = children
+                tree += 1
+                for child in node['children']:
+                    child_printer(child, tree)
 
 
 def scan_xml_file(xml_file):
@@ -76,9 +84,9 @@ def scan_xml_file(xml_file):
 
         template = json.loads(result_json)
 
-        for child in template['children'][0]['children']:
-            tree = 1
-            child_printer(child, tree)
+        #for child in template['children'][0]['children']:
+        tree = 0
+        child_printer(template, tree)
     except:
         return False
     return template
